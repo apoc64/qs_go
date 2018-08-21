@@ -3,10 +3,11 @@ package main
 import (
   "fmt"
   "net/http"
-  "os"
+  // "os"
   "encoding/json"
   "log" // errors
   "github.com/gorilla/mux"
+  "strconv"
 )
 
 // func getPort() string {
@@ -17,9 +18,62 @@ import (
 //   return ":3000"
 // }
 
+// Food Struct (model)
+type Food struct {
+  ID        int    `json:"id"`
+  Name      string  `json:"name"`
+  Calories  int     `json:"calories"`
+}
+
+// slice - mutable array data type
+var foods []Food
+
+func getFoods(w http.ResponseWriter, r *http.Request) {
+  // w reporesents response writer
+  w.Header().Set("Content-Type", "application/json")
+  json.NewEncoder(w).Encode(foods)
+}
+
+func getFood(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  params := mux.Vars(r)
+  // Loop through books - DB???
+  for _, item := range foods {
+    id, err := strconv.Atoi(params["id"])
+      fmt.Println(err)
+    if item.ID == id {
+      json.NewEncoder(w).Encode(item)
+      return
+    }
+  }
+  json.NewEncoder(w).Encode(&Food{})
+}
+
+func createFood(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  var food Food
+  _ = json.NewDecoder(r.Body).Decode(&food)
+  food.ID = len(foods) // not for db
+  foods = append(foods, food)
+  json.NewEncoder(w).Encode(food)
+
+}
+
+func updateFood(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func deleteFood(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func main() {
   // Init router
   r := mux.NewRouter()
+
+  // Mock Data
+  foods = append(foods, Food{ID: 1, Name: "Pizza", Calories: 400})
+  foods = append(foods, Food{ID: 2, Name: "Cat", Calories: 800})
 
   // Route handlers:
   r.HandleFunc("/api/v1/foods", getFoods).Methods("GET")
@@ -28,7 +82,7 @@ func main() {
   r.HandleFunc("/api/v1/foods/{id}", updateFood).Methods("PATCH")
   r.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
 
-  log.Fatal(http.ListenAndServe(":3000", r)
+  log.Fatal(http.ListenAndServe(":3000", r))
   // port := getPort()
   //
   // http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -36,6 +90,7 @@ func main() {
   //   fmt.Fprintf(w, "Hello from go")
   // })
   //
+  fmt.Println("Hello")
   // fmt.Println("Listening on port", port)
   // err := http.ListenAndServe(port, nil)
   // if err != nil {
