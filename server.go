@@ -17,11 +17,14 @@ func getPort() string {
 func main() {
   port := getPort()
 
-  fmt.Println("hello world")
-
   http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Request made to /")
     fmt.Fprintf(w, "Hello from go")
   })
 
-  fmt.Println(http.ListenAndServe(port, nil))
+  fmt.Println("Listening on port", port)
+  err := http.ListenAndServe(port, nil)
+  if err != nil {
+    panic(err)
+  }
 }
