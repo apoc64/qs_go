@@ -33,7 +33,12 @@ func main() {
   r.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
 
   port := getPort()
-  fmt.Println("About to listening on port", port)
+  fmt.Println("Preparing to listening on port", port)
   log.Fatal(http.ListenAndServe(port, r))
 
 } // end main
+
+/*
+To run from the command line:
+go run $(ls -1 *.go | grep -v _test.go)
+*/
