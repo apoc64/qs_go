@@ -16,6 +16,7 @@ type Food struct {
 }
 
 func getFoods(w http.ResponseWriter, r *http.Request) {
+  fmt.Println("Get foods func run")
   // w reporesents response writer
   w.Header().Set("Content-Type", "application/json")
   json.NewEncoder(w).Encode(foods)
