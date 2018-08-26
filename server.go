@@ -17,7 +17,7 @@ func main() {
 
   port := getPort()
   c := cors.New(cors.Options{
-    AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
+    AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
     OptionsPassthrough: true,
     Debug: true,
   })
