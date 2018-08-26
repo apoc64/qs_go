@@ -14,6 +14,7 @@ var dbInitialized bool
 func db() *sql.DB {
   if !dbInitialized {
     fmt.Println("Initializing database")
+    fmt.Println(getDBName())
     newDB, err := sql.Open("postgres", getDBName())
     if err != nil {
       log.Fatal(err)
