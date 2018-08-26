@@ -4,12 +4,10 @@ import (
   "fmt"
   "net/http"
   "os"
-  "log" // error logging library
+  "log"
   "github.com/gorilla/mux"
   "github.com/rs/cors"
 )
-
-var foods []Food // Mock data Slice - Remove Later
 
 func main() {
   r := mux.NewRouter()
@@ -18,12 +16,16 @@ func main() {
   port := getPort()
   c := cors.New(cors.Options{
     AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
+    AllowCredentials: true,
+    OptionsPassthrough: true,
     Debug: true,
   })
   handler := c.Handler(r)
   fmt.Println("Preparing to listening on port", port)
   log.Fatal(http.ListenAndServe(port, handler))
 }
+
+var foods []Food // Mock data Slice - Remove Later
 
 func setRoutes(r *mux.Router) {
   // Mock Data - Remove Later:
