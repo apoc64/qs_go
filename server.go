@@ -6,7 +6,8 @@ import (
   "os"
   "log"
   "github.com/gorilla/mux"
-  "github.com/rs/cors"
+  "github.com/gorilla/handlers"
+  // "github.com/rs/cors"
 )
 
 func main() {
@@ -14,15 +15,15 @@ func main() {
   setRoutes(r)
 
   port := getPort()
-  c := cors.New(cors.Options{
-    AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
-    AllowCredentials: true,
-    OptionsPassthrough: true,
-    Debug: true,
-  })
-  handler := c.Handler(r)
+  // c := cors.New(cors.Options{
+  //   AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
+  //   AllowCredentials: true,
+  //   OptionsPassthrough: true,
+  //   Debug: true,  // can remove when complete
+  // })
+  // handler := c.Handler(r)
   fmt.Println("Preparing to listening on port", port)
-  log.Fatal(http.ListenAndServe(port, handler))
+  log.Fatal(http.ListenAndServe(port, handlers.CORS()(r)))
 }
 
 var foods []Food // Mock data Slice - Remove Later
