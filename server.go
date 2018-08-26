@@ -23,7 +23,7 @@ func main() {
   // })
   // handler := c.Handler(r)
   fmt.Println("Preparing to listening on port", port)
-  log.Fatal(http.ListenAndServe(port, handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}), handlers.IgnoreOptions(), handlers.AllowCredentials())(r)))
+  log.Fatal(http.ListenAndServe(port, handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(r)))
 }
 
 var foods []Food // Mock data Slice - Remove Later
