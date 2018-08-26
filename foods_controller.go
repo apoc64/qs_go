@@ -42,8 +42,9 @@ func createFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   var food Food
   _ = json.NewDecoder(r.Body).Decode(&food)
-  food.ID = len(foods) + 1 // not for db
-  foods = append(foods, food)
+  addFoodToDB(food)
+  // food.ID = len(foods) + 1 // not for db
+  // foods = append(foods, food)
   json.NewEncoder(w).Encode(food)
 
 }
