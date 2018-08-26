@@ -30,7 +30,8 @@ func db() *sql.DB {
 func getDBName() string {
   d := os.Getenv("DATABASE_URL")
   if d != "" {
-    return d + "?ssl=true"
+    name := fmt.Sprintf("dbname=%s", d)
+    return name
   }
   return "dbname=qs_go sslmode=disable"
 }
