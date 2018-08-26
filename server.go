@@ -16,7 +16,12 @@ func main() {
   setRoutes(r)
 
   port := getPort()
-  handler := cors.Default().Handler(r)
+  c := cors.New(cors.Options{
+    AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
+    OptionsPassthrough: true,
+    Debug: true,
+  })
+  handler := c.Handler(r)
   fmt.Println("Preparing to listening on port", port)
   log.Fatal(http.ListenAndServe(port, handler))
 }
