@@ -9,11 +9,11 @@ import (
 )
 
 // Food Struct (model)
-type Food struct {
-  ID        int    `json:"id"`
-  Name      string  `json:"name"`
-  Calories  int     `json:"calories"`
-}
+// type Food struct {
+//   ID        int    `json:"id"`
+//   Name      string  `json:"name"`
+//   Calories  int     `json:"calories"`
+// }
 
 func getFoods(w http.ResponseWriter, r *http.Request) {
   fmt.Println("Get foods func run")
