@@ -14,9 +14,12 @@ func main() {
   setRoutes(r)
 
   port := getPort()
-
   fmt.Println("Preparing to listening on port", port)
-  log.Fatal(http.ListenAndServe(port, handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(r)))
+  
+  log.Fatal(http.ListenAndServe(port, handlers.CORS(
+    handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+    handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
+    handlers.AllowedOrigins([]string{"*"}))(r)))
 }
 
 var foods []Food // Mock data Slice - Remove Later

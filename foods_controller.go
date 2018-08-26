@@ -9,14 +9,15 @@ import (
 )
 
 // Food Struct (model)
-type Food struct {
-  ID        int    `json:"id"`
-  Name      string  `json:"name"`
-  Calories  int     `json:"calories"`
-}
+// type Food struct {
+//   ID        int    `json:"id"`
+//   Name      string  `json:"name"`
+//   Calories  int     `json:"calories"`
+// }
 
 func getFoods(w http.ResponseWriter, r *http.Request) {
   fmt.Println("Get foods func run")
+  getFoodsFromDB()
   // w reporesents response writer
   w.Header().Set("Content-Type", "application/json")
   json.NewEncoder(w).Encode(foods)
@@ -41,10 +42,9 @@ func createFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   var food Food
   _ = json.NewDecoder(r.Body).Decode(&food)
-  food.ID = len(foods) + 1 // not for db
-  foods = append(foods, food)
+  id := addFoodToDB(food)
+  food.ID = id
   json.NewEncoder(w).Encode(food)
-
 }
 
 func updateFood(w http.ResponseWriter, r *http.Request) {
