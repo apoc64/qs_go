@@ -19,17 +19,15 @@ func getFoodsFromDB() {
   db()
 }
 
-func addFoodToDB(food Food) {
-  fmt.Println(food)
-  fmt.Println(food.Name)
-  fmt.Println(food.Calories)
+func addFoodToDB(food Food) int {
   db := db()
   fmt.Println(db)
-  queryString := "INSERT INTO foods (name, calories) VALUES ($1, $2)"
+  queryString := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
   fmt.Println(queryString)
-  result, err := db.Exec(queryString, food.Name, food.Calories)
+  id := 0
+  err := db.QueryRow(queryString, food.Name, food.Calories).Scan(&id)
   if err != nil {
     log.Fatal(err)
   }
-  fmt.Println(result)
+  return id
 }
