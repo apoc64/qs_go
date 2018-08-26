@@ -6,6 +6,7 @@ import (
   "os"
   "log" // error logging library
   "github.com/gorilla/mux"
+  "github.com/rs/cors"
 )
 
 var foods []Food // Mock data Slice - Remove Later
@@ -15,15 +16,16 @@ func main() {
   setRoutes(r)
 
   port := getPort()
+  handler := cors.Default().Handler(r)
   fmt.Println("Preparing to listening on port", port)
-  log.Fatal(http.ListenAndServe(port, r))
-} // end main
+  log.Fatal(http.ListenAndServe(port, handler))
+}
 
 func setRoutes(r *mux.Router) {
   // Mock Data - Remove Later:
   foods = append(foods, Food{ID: 1, Name: "Pizza", Calories: 400})
   foods = append(foods, Food{ID: 2, Name: "Cat", Calories: 800})
-  
+
   r.HandleFunc("/api/v1/foods", getFoods).Methods("GET")
   r.HandleFunc("/api/v1/foods/{id}", getFood).Methods("GET")
   r.HandleFunc("/api/v1/foods", createFood).Methods("POST")
