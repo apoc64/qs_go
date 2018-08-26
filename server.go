@@ -33,11 +33,11 @@ func setRoutes(r *mux.Router) {
   foods = append(foods, Food{ID: 1, Name: "Pizza", Calories: 400})
   foods = append(foods, Food{ID: 2, Name: "Cat", Calories: 800})
 
-  r.HandleFunc("/api/v1/foods", getFoods).Methods("GET")
-  r.HandleFunc("/api/v1/foods/{id}", getFood).Methods("GET")
-  r.HandleFunc("/api/v1/foods", createFood).Methods("POST")
-  r.HandleFunc("/api/v1/foods/{id}", updateFood).Methods("PATCH")
-  r.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
+  r.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
+  r.HandleFunc("/api/v1/foods/{id}/", getFood).Methods("GET")
+  r.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
+  r.HandleFunc("/api/v1/foods/{id}/", updateFood).Methods("PATCH")
+  r.HandleFunc("/api/v1/foods/{id}/", deleteFood).Methods("DELETE")
 }
 
 func getPort() string {
