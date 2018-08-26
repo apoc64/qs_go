@@ -7,7 +7,6 @@ import (
   "log"
   "github.com/gorilla/mux"
   "github.com/gorilla/handlers"
-  // "github.com/rs/cors"
 )
 
 func main() {
@@ -15,13 +14,7 @@ func main() {
   setRoutes(r)
 
   port := getPort()
-  // c := cors.New(cors.Options{
-  //   AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
-  //   AllowCredentials: true,
-  //   OptionsPassthrough: true,
-  //   Debug: true,  // can remove when complete
-  // })
-  // handler := c.Handler(r)
+
   fmt.Println("Preparing to listening on port", port)
   log.Fatal(http.ListenAndServe(port, handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(r)))
 }
