@@ -19,7 +19,7 @@ func TestGetPort(t *testing.T) {
 func TestGetFoods(t *testing.T) { // change for db
   r := mux.NewRouter()
   setRoutes(r)
-  req, _ := http.NewRequest("GET", "/api/v1/foods", nil)
+  req, _ := http.NewRequest("GET", "/api/v1/foods/", nil)
   rr := httptest.NewRecorder()
   r.ServeHTTP(rr, req)
   actual := rr.Body.String()
