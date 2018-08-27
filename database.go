@@ -28,6 +28,7 @@ func initializeDB() {
   database = newDB
   fmt.Println("Database Initialized:", newDB)
   migrateDB()
+  seedDB()
 }
 
 func getDBName() string {
@@ -44,6 +45,26 @@ func migrateDB() {
   runSQL(foodsTableCreation)
   runSQL(mealsTableCreation)
   runSQL(mealFoodsTableCreation)
+}
+
+func seedDB() {
+  count := 0
+  err := db().QueryRow("SELECT COUNT(id) FROM meals").Scan(&count)
+  if err != nil {
+    log.Fatal(err)
+  }
+  fmt.Println("Number of meals:", count)
+  if count != 4 {
+    seedMeals()
+  }
+}
+
+func seedMeals() {
+  fmt.Println("Seeding meals")
+  runSQL("INSERT INTO meals (id, name) VALUES (1, 'Breakfast')")
+  runSQL("INSERT INTO meals (id, name) VALUES (2, 'Snack')")
+  runSQL("INSERT INTO meals (id, name) VALUES (3, 'Lunch')")
+  runSQL("INSERT INTO meals (id, name) VALUES (4, 'Dinner')")
 }
 
 func runSQL(sqlQuery string) {

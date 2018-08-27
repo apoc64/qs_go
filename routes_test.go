@@ -14,6 +14,7 @@ func setup() *mux.Router {
   runSQL("TRUNCATE TABLE meal_foods RESTART IDENTITY")
   runSQL("TRUNCATE TABLE foods RESTART IDENTITY")
   runSQL("TRUNCATE TABLE meals RESTART IDENTITY")
+  seedMeals()
 
   r := mux.NewRouter()
   setRoutes(r)
@@ -27,7 +28,7 @@ func TestGetPort(t *testing.T) {
   }
 }
 
-func TestGetFoods(t *testing.T) { // change for db
+func TestGetFoods(t *testing.T) {
   r := setup()
   runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
   runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
@@ -56,7 +57,7 @@ func TestAddFood(t *testing.T) {
   }
 }
 
-func TestGetOneFood(t *testing.T) { // change for db
+func TestGetOneFood(t *testing.T) {
   r := setup()
   runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
   runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
@@ -71,7 +72,7 @@ func TestGetOneFood(t *testing.T) { // change for db
   }
 }
 
-func TestDeleteFood(t *testing.T) { // change for db
+func TestDeleteFood(t *testing.T) {
   r := setup()
   runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
   runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
@@ -84,7 +85,7 @@ func TestDeleteFood(t *testing.T) { // change for db
   }
 }
 
-func TestGetMeals(t *testing.T) { // change for db
+func TestGetMeals(t *testing.T) {
   r := setup()
   runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
   runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
