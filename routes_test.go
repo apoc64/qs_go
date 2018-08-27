@@ -29,10 +29,8 @@ func TestGetPort(t *testing.T) {
 
 func TestGetFoods(t *testing.T) { // change for db
   r := setup()
-  // runSQL("INSERT INTO foods (name, calories) VALUES ('pizza', 500)")
-  // runSQL("INSERT INTO foods (name, calories) VALUES ('cat', 700)")
-  addFoodToDB(Food{ID: 1, Name: "Pizza", Calories: 500})
-  addFoodToDB(Food{ID: 1, Name: "Cat", Calories: 700})
+  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
   req, _ := http.NewRequest("GET", "/api/v1/foods/", nil)
   rr := httptest.NewRecorder()
   r.ServeHTTP(rr, req)
