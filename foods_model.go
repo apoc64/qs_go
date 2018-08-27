@@ -12,13 +12,32 @@ type Food struct {
   Calories  int     `json:"calories"`
 }
 
-func getFoodsFromDB() {
-  db()
+func getFoodsFromDB() []Food {
+  queryString := "SELECT * FROM foods"
+  rows, err := db().Query(queryString)
+  if err != nil {
+    log.Fatal(err)
+  }
+  var (
+    id int
+    name string
+    calories int
+    foods []Food
+  )
+  defer rows.Close()
+  for rows.Next() {
+    err := rows.Scan(&id, &name, &calories)
+    if err != nil {
+      log.Fatal(err)
+    }
+    food := Food{ID: id, Name: name, Calories: calories}
+    foods = append(foods, food)
+  }
+  return foods
 }
 
 func addFoodToDB(food Food) int {
   db := db()
-  fmt.Println(db)
   queryString := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
   fmt.Println(queryString)
   id := 0

@@ -15,20 +15,14 @@ func main() {
 
   port := getPort()
   fmt.Println("Preparing to listening on port", port)
-  
+
   log.Fatal(http.ListenAndServe(port, handlers.CORS(
     handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
     handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
     handlers.AllowedOrigins([]string{"*"}))(r)))
 }
 
-var foods []Food // Mock data Slice - Remove Later
-
 func setRoutes(r *mux.Router) {
-  // Mock Data - Remove Later:
-  foods = append(foods, Food{ID: 1, Name: "Pizza", Calories: 400})
-  foods = append(foods, Food{ID: 2, Name: "Cat", Calories: 800})
-
   r.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
   r.HandleFunc("/api/v1/foods/{id}/", getFood).Methods("GET")
   r.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
