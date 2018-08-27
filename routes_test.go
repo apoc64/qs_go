@@ -83,3 +83,26 @@ func TestDeleteFood(t *testing.T) { // change for db
     t.Error("Delete Food - Expected 204, Got:", status)
   }
 }
+
+func TestGetMeals(t *testing.T) { // change for db
+  r := setup()
+  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  runSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (1, 1)")
+  runSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (2, 1)")
+  req, _ := http.NewRequest("GET", "/api/v1/meals/", nil)
+  response := httptest.NewRecorder()
+  r.ServeHTTP(response, req)
+  actual := response.Body.String()
+  actual = strings.TrimRight(actual, "\r\n ")
+  expected := `[{
+    "id": 1,"name": "Breakfast","foods": [
+      {"id": 1,"name": "Pizza","calories": 500},
+      {"id": 2,"name": "Cat","calories": 700}]},
+    {"id": 2,"name": "Snack"},
+    {"id": 3,"name": "Lunch"},
+    {"id": 4,"name": "Dinner"}]`
+  if(actual != expected) {
+    t.Error("Get One Food - Expected:", expected, "Got:", actual)
+  }
+}
