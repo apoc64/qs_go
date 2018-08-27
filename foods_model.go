@@ -52,3 +52,16 @@ func addFoodToDB(food Food) int {
   }
   return id
 }
+
+func deleteFoodFromDB(id int) bool {
+  queryString := "DELETE FROM foods WHERE id=$1 RETURNING id, name"
+  fmt.Println("Preparing to delete food:", queryString, id)
+  deleted_id := 0
+  name := ""
+  err := db().QueryRow(queryString, id).Scan(&deleted_id, &name)
+  if err != nil {
+    log.Fatal(err)
+  }
+  fmt.Println("Deleted", name)
+  return (id == deleted_id)
+}

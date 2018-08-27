@@ -63,8 +63,14 @@ func updateFood(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteFood(w http.ResponseWriter, r *http.Request) {
-  // w.Header().Set("Content-Type", "application/json")
-  // params := mux.Vars(r)
+  w.Header().Set("Content-Type", "application/json")
+  params := mux.Vars(r)
+  id, _ := strconv.Atoi(params["id"])
+  if deleteFoodFromDB(id) {
+    w.WriteHeader(http.StatusNoContent)
+  } else {
+    w.WriteHeader(http.StatusNotFound)
+  }
   // for index, item := range foods {
   //   id, err := strconv.Atoi(params["id"])
   //   fmt.Println(err)
