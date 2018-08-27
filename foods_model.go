@@ -52,3 +52,8 @@ func addFoodToDB(food Food) int {
   }
   return id
 }
+
+func deleteFoodFromDB(id int) bool {
+
+  return false
+}
