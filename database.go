@@ -6,6 +6,7 @@ import (
   "os"
   "database/sql"
   _ "github.com/lib/pq"
+  "strings"
 )
 
 var database *sql.DB
@@ -32,6 +33,7 @@ func getDBName() string {
   d := os.Getenv("DATABASE_URL")
   if d != "" {
     name := fmt.Sprintf("dbname=%s", d)
+    name = strings.TrimPrefix(name, "postgres://")
     return name
   }
   return "dbname=qs_go sslmode=disable"
