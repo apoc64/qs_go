@@ -5,8 +5,8 @@ import (
   "log"
   "os"
   "database/sql"
-  _ "github.com/lib/pq"
-  "strings"
+  "github.com/lib/pq"
+  // "strings"
 )
 
 var database *sql.DB
@@ -30,11 +30,14 @@ func db() *sql.DB {
 }
 
 func getDBName() string {
-  name := os.Getenv("DATABASE_URL")
-  if name != "" {
-    name = strings.TrimPrefix(name, "postgres://")
-    name = fmt.Sprintf("dbname=%s", name)
-    return name
+  url := os.Getenv("DATABASE_URL")
+  if url != "" {
+    connection, _ := pq.ParseURL(url)
+    connection += " sslmode=require"
+
+    // url = strings.TrimPrefix(url, "postgres://")
+    // url = fmt.Sprintf("dbname=%s", url)
+    return connection
   }
   return "dbname=qs_go sslmode=disable"
 }
