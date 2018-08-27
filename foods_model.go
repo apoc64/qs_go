@@ -5,7 +5,6 @@ import (
   "log"
 )
 
-// Food Struct (model)
 type Food struct {
   ID        int    `json:"id"`
   Name      string  `json:"name"`
@@ -19,18 +18,14 @@ func getFoodsFromDB() []Food {
     log.Fatal(err)
   }
   var (
-    id int
-    name string
-    calories int
+    food Food
     foods []Food
   )
-  defer rows.Close()
+  defer rows.Close() // async - closes rows when func finishes
   for rows.Next() {
-    err := rows.Scan(&id, &name, &calories)
-    if err != nil {
+    if err := rows.Scan(&food.ID, &food.Name, &food.Calories); err != nil {
       log.Fatal(err)
     }
-    food := Food{ID: id, Name: name, Calories: calories}
     foods = append(foods, food)
   }
   return foods
@@ -48,7 +43,6 @@ func getFoodFromDB(id int) Food {
 }
 
 func addFoodToDB(food Food) int {
-  // db := db()
   queryString := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
   fmt.Println("Preparing to add food:", queryString, food.Name, food.Calories)
   id := 0
