@@ -35,6 +35,7 @@ func getFood(w http.ResponseWriter, r *http.Request) {
 func createFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   var food Food
+  fmt.Println("Preparing to add food with parameters:", r.Body)
   _ = json.NewDecoder(r.Body).Decode(&food)
   id := addFoodToDB(food)
   food.ID = id
