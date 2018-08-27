@@ -75,7 +75,7 @@ func TestDeleteFood(t *testing.T) { // change for db
   r := setup()
   runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
   runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
-  req, _ := http.NewRequest("DELETE", "/api/v1/foods/2/", nil)
+  req, _ := http.NewRequest("DELETE", "/api/v1/foods/2", nil)
   response := httptest.NewRecorder()
   r.ServeHTTP(response, req)
   status := response.Code

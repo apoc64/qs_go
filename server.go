@@ -27,7 +27,7 @@ func setRoutes(r *mux.Router) {
   r.HandleFunc("/api/v1/foods/{id}/", getFood).Methods("GET")
   r.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
   r.HandleFunc("/api/v1/foods/{id}/", updateFood).Methods("PATCH")
-  r.HandleFunc("/api/v1/foods/{id}/", deleteFood).Methods("DELETE")
+  r.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
 }
 
 func getPort() string {
