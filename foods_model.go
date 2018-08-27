@@ -39,7 +39,7 @@ func getFoodsFromDB() []Food {
 func addFoodToDB(food Food) int {
   db := db()
   queryString := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
-  fmt.Println(queryString)
+  fmt.Println("Preparing to add food:", queryString, food.Name, food.Calories)
   id := 0
   err := db.QueryRow(queryString, food.Name, food.Calories).Scan(&id)
   if err != nil {
