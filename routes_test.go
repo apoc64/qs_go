@@ -8,20 +8,13 @@ import (
   "github.com/gorilla/mux"
   "strings"
   "bytes"
-  "log"
 )
 
 func setup() *mux.Router {
-  db := db()
-  if _, err := db.Exec("TRUNCATE TABLE meal_foods RESTART IDENTITY"); err != nil {
-    log.Fatal(err)
-  }
-  if _, err := db.Exec("TRUNCATE TABLE foods RESTART IDENTITY"); err != nil {
-    log.Fatal(err)
-  }
-  if _, err := db.Exec("TRUNCATE TABLE meals RESTART IDENTITY"); err != nil {
-    log.Fatal(err)
-  }
+  runSQL("TRUNCATE TABLE meal_foods RESTART IDENTITY")
+  runSQL("TRUNCATE TABLE foods RESTART IDENTITY")
+  runSQL("TRUNCATE TABLE meals RESTART IDENTITY")
+
   r := mux.NewRouter()
   setRoutes(r)
   return r

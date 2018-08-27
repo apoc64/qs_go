@@ -6,7 +6,6 @@ import (
   "os"
   "database/sql"
   "github.com/lib/pq"
-  // "strings"
 )
 
 var database *sql.DB
@@ -14,19 +13,21 @@ var dbInitialized bool
 
 func db() *sql.DB {
   if !dbInitialized {
-    fmt.Println("Initializing database")
-    fmt.Println(getDBName())
-    newDB, err := sql.Open("postgres", getDBName())
-    if err != nil {
-      log.Fatal(err)
-    }
-    migrateDB(newDB)
-    fmt.Println(getDBName())
-    fmt.Println(newDB)
-    dbInitialized = true
-    database = newDB
+    initializeDB()
   }
   return database
+}
+
+func initializeDB() {
+  fmt.Println("Initializing database with name:", getDBName())
+  newDB, err := sql.Open("postgres", getDBName())
+  if err != nil {
+    log.Fatal(err)
+  }
+  dbInitialized = true
+  database = newDB
+  fmt.Println("Database Initialized:", newDB)
+  migrateDB()
 }
 
 func getDBName() string {
@@ -34,22 +35,20 @@ func getDBName() string {
   if url != "" {
     connection, _ := pq.ParseURL(url)
     connection += " sslmode=require"
-
-    // url = strings.TrimPrefix(url, "postgres://")
-    // url = fmt.Sprintf("dbname=%s", url)
     return connection
   }
   return "dbname=qs_go sslmode=disable"
 }
 
-func migrateDB(db *sql.DB) {
-  if _, err := db.Exec(foodsTableCreation); err != nil {
-    log.Fatal(err)
-  }
-  if _, err := db.Exec(mealsTableCreation); err != nil {
-    log.Fatal(err)
-  }
-  if _, err := db.Exec(mealFoodsTableCreation); err != nil {
+func migrateDB() {
+  runSQL(foodsTableCreation)
+  runSQL(mealsTableCreation)
+  runSQL(mealFoodsTableCreation)
+}
+
+func runSQL(sqlQuery string) {
+  fmt.Println("Preparing to execute:", sqlQuery)
+  if _, err := db().Exec(sqlQuery); err != nil {
     log.Fatal(err)
   }
 }
