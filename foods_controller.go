@@ -5,7 +5,7 @@ import (
   "net/http"
   "encoding/json"
   // "github.com/gorilla/mux"
-  // "strconv"
+  "strconv"
 )
 
 
@@ -32,11 +32,21 @@ func getFood(w http.ResponseWriter, r *http.Request) {
   // json.NewEncoder(w).Encode(&Food{})
 }
 
+type FoodHolder struct {
+  TempFood        TempFood    `json:"food"`
+}
+type TempFood struct {
+  Name string `json:"name"`
+  Calories string `json:"calories"`
+}
+
 func createFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-  var food Food
-  fmt.Println("Preparing to add food with parameters:", r.Body)
-  _ = json.NewDecoder(r.Body).Decode(&food)
+  var foodHolder FoodHolder
+  _ = json.NewDecoder(r.Body).Decode(&foodHolder)
+  fmt.Printf("Params: %#v\n", foodHolder)
+  calories, _ := strconv.Atoi(foodHolder.TempFood.Calories)
+  food := Food{Name: foodHolder.TempFood.Name, Calories: calories}
   id := addFoodToDB(food)
   food.ID = id
   json.NewEncoder(w).Encode(food)

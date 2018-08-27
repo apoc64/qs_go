@@ -44,7 +44,7 @@ func TestGetFoods(t *testing.T) { // change for db
 
 func TestAddFood(t *testing.T) {
   r := setup()
-  payload := []byte(`{"name":"sushi","calories":300}`)
+  payload := []byte(`{"food":{"name":"sushi","calories":"300"}}`)
   req, _ := http.NewRequest("POST", "/api/v1/foods/", bytes.NewBuffer(payload))
   rr := httptest.NewRecorder()
   r.ServeHTTP(rr, req)
