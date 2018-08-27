@@ -4,32 +4,23 @@ import (
   "fmt"
   "net/http"
   "encoding/json"
-  // "github.com/gorilla/mux"
+  "github.com/gorilla/mux"
   "strconv"
 )
 
 
 func getFoods(w http.ResponseWriter, r *http.Request) {
-  fmt.Println("Get foods func run")
-  foods := getFoodsFromDB()
-  // w reporesents response writer
   w.Header().Set("Content-Type", "application/json")
+  foods := getFoodsFromDB()
   json.NewEncoder(w).Encode(foods)
 }
 
 func getFood(w http.ResponseWriter, r *http.Request) {
-  // w.Header().Set("Content-Type", "application/json")
-  // params := mux.Vars(r)
-  // // Loop through books - DB???
-  // for _, item := range foods {
-  //   id, err := strconv.Atoi(params["id"])
-  //   fmt.Println(err)
-  //   if item.ID == id {
-  //     json.NewEncoder(w).Encode(item)
-  //     return
-  //   }
-  // }
-  // json.NewEncoder(w).Encode(&Food{})
+  w.Header().Set("Content-Type", "application/json")
+  params := mux.Vars(r)
+  id, _ := strconv.Atoi(params["id"])
+  food := getFoodFromDB(id)
+  json.NewEncoder(w).Encode(food)
 }
 
 type FoodHolder struct {
