@@ -96,14 +96,8 @@ func TestGetMeals(t *testing.T) {
   r.ServeHTTP(response, req)
   actual := response.Body.String()
   actual = strings.TrimRight(actual, "\r\n ")
-  expected := `[{
-    "id": 1,"name": "Breakfast","foods": [
-      {"id": 1,"name": "Pizza","calories": 500},
-      {"id": 2,"name": "Cat","calories": 700}]},
-    {"id": 2,"name": "Snack"},
-    {"id": 3,"name": "Lunch"},
-    {"id": 4,"name": "Dinner"}]`
+  expected := `[{"id":1,"name":"Breakfast","foods":[{"id":1,"name":"Pizza","calories":500},{"id":2,"name":"Cat","calories":700}]},{"id":2,"name":"Snack","foods":null},{"id":3,"name":"Lunch","foods":null},{"id":4,"name":"Dinner","foods":null}]`
   if(actual != expected) {
-    t.Error("Get One Food - Expected:", expected, "Got:", actual)
+    t.Error("Get One Food - Expected:\n", expected, "Got:\n", actual)
   }
 }
