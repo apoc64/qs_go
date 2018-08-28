@@ -1,7 +1,7 @@
 package main
 
 import (
-  // "qs_go/models"
+  "qs_go/controllers"
   "fmt"
   "net/http"
   "os"
@@ -24,15 +24,15 @@ func main() {
 }
 
 func setRoutes(r *mux.Router) {
-  r.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
-  r.HandleFunc("/api/v1/foods/{id}/", getFood).Methods("GET")
-  r.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
-  r.HandleFunc("/api/v1/foods/{id}", updateFood).Methods("PATCH")
-  r.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
-  r.HandleFunc("/api/v1/meals/", getMeals).Methods("GET")
-  r.HandleFunc("/api/v1/meals/{id}/", getMeal).Methods("GET")
-  r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", postMealFood).Methods("POST")
-  r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", deleteMealFood).Methods("DELETE")
+  r.HandleFunc("/api/v1/foods/", controllers.GetFoods).Methods("GET")
+  r.HandleFunc("/api/v1/foods/{id}/", controllers.GetFood).Methods("GET")
+  r.HandleFunc("/api/v1/foods/", controllers.CreateFood).Methods("POST")
+  r.HandleFunc("/api/v1/foods/{id}", controllers.UpdateFood).Methods("PATCH")
+  r.HandleFunc("/api/v1/foods/{id}", controllers.DeleteFood).Methods("DELETE")
+  r.HandleFunc("/api/v1/meals/", controllers.GetMeals).Methods("GET")
+  r.HandleFunc("/api/v1/meals/{id}/", controllers.GetMeal).Methods("GET")
+  r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", controllers.PostMealFood).Methods("POST")
+  r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", controllers.DeleteMealFood).Methods("DELETE")
 }
 
 func getPort() string {

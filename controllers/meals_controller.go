@@ -1,4 +1,4 @@
-package main
+package controllers
 
 import (
   "qs_go/models"
@@ -9,13 +9,13 @@ import (
   "strconv"
 )
 
-func getMeals(w http.ResponseWriter, r *http.Request) {
+func GetMeals(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   meals := models.GetMealsFromDB()
   json.NewEncoder(w).Encode(meals)
 }
 
-func getMeal(w http.ResponseWriter, r *http.Request) {
+func GetMeal(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
   fmt.Printf("%#v\n", params)
@@ -26,7 +26,7 @@ func getMeal(w http.ResponseWriter, r *http.Request) {
   json.NewEncoder(w).Encode(meal)
 }
 
-func postMealFood(w http.ResponseWriter, r *http.Request) {
+func PostMealFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
   foodID, _ := strconv.Atoi(params["food_id"])
@@ -36,7 +36,7 @@ func postMealFood(w http.ResponseWriter, r *http.Request) {
   json.NewEncoder(w).Encode(message)
 }
 
-func deleteMealFood(w http.ResponseWriter, r *http.Request) {
+func DeleteMealFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
   foodID, _ := strconv.Atoi(params["food_id"])

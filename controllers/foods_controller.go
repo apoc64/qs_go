@@ -1,4 +1,4 @@
-package main
+package controllers
 
 import (
   "qs_go/models"
@@ -9,13 +9,13 @@ import (
   "strconv"
 )
 
-func getFoods(w http.ResponseWriter, r *http.Request) {
+func GetFoods(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   foods := models.GetFoodsFromDB()
   json.NewEncoder(w).Encode(foods)
 }
 
-func getFood(w http.ResponseWriter, r *http.Request) {
+func GetFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
   id, _ := strconv.Atoi(params["id"])
@@ -31,7 +31,7 @@ type TempFood struct {
   Calories string `json:"calories"`
 }
 
-func createFood(w http.ResponseWriter, r *http.Request) {
+func CreateFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   var foodHolder FoodHolder
   _ = json.NewDecoder(r.Body).Decode(&foodHolder)
@@ -43,7 +43,7 @@ func createFood(w http.ResponseWriter, r *http.Request) {
   json.NewEncoder(w).Encode(food)
 }
 
-func updateFood(w http.ResponseWriter, r *http.Request) {
+func UpdateFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
   id, _ := strconv.Atoi(params["id"])
@@ -60,7 +60,7 @@ func updateFood(w http.ResponseWriter, r *http.Request) {
   }
 }
 
-func deleteFood(w http.ResponseWriter, r *http.Request) {
+func DeleteFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
   id, _ := strconv.Atoi(params["id"])
