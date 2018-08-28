@@ -88,3 +88,21 @@ func postMealFoodToDB(foodID int, mealID int) Message {
     return Message{Message: "Failure"}
   }
 }
+
+func deleteMealFoodFromDB(foodID int, mealID int) Message {
+  food := getFoodFromDB(foodID)
+  meal := getMealFromDB(mealID)
+  queryString := "DELETE FROM meal_foods WHERE meal_id=$1 AND food_id=$2 RETURNING id"
+  fmt.Println("Preparing to add meal_food:", queryString, mealID, foodID)
+  id := 0
+  err := db().QueryRow(queryString, mealID, foodID).Scan(&id)
+  if err != nil {
+    log.Fatal(err)
+  }
+  if id > 0 {
+    message := fmt.Sprintf("Successfully removed %v from %v", strings.ToUpper(food.Name), strings.ToUpper(meal.Name))
+    return Message{Message: message}
+  } else {
+    return Message{Message: "Failure"}
+  }
+}
