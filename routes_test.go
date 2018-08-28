@@ -116,3 +116,18 @@ func TestPostMealFood(t *testing.T) {
     t.Error("Post meal food - Expected:\n", expected, "Got:\n", actual)
   }
 }
+
+func TestDeleteMealFood(t *testing.T) {
+  r := setup()
+  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  runSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (1, 1)")
+  req, _ := http.NewRequest("DELETE", "/api/v1/meals/1/foods/1", nil)
+  response := httptest.NewRecorder()
+  r.ServeHTTP(response, req)
+  actual := response.Body.String()
+  actual = strings.TrimRight(actual, "\r\n ")
+  expected := `{"message":"Successfully removed PIZZA from BREAKFAST"}`
+  if actual != expected {
+    t.Error("Post meal food - Expected:\n", expected, "Got:\n", actual)
+  }
+}
