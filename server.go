@@ -42,8 +42,3 @@ func getPort() string {
   }
   return ":3000"
 }
-
-/*
-To run from the command line:
-go run $(ls -1 *.go | grep -v _test.go)
-*/

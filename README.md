@@ -44,7 +44,7 @@ When running in production, the app will connect to a database from a DATABASE_U
 
 To run the server locally without the tests, run:
 
-``` $ go run $(ls -1 *.go | grep -v _test.go) ```
+``` $ go run server.go ```
 
 This line is also included in comments at the bottom of server.go
 
