@@ -1,8 +1,9 @@
 package main
 
 import (
-  // "fmt"
+  "fmt"
   "log"
+  "strings"
 )
 
 type Meal struct {
@@ -53,4 +54,37 @@ func getMealFoods(meal_id int) []Food {
     foods = append(foods, food)
   }
   return foods
+}
+
+func getMealFromDB(id int) Meal {
+  queryString := "SELECT * FROM meals WHERE id=$1"
+  fmt.Println("Preparing to get meal:", queryString, id)
+  var meal Meal
+  err := db().QueryRow(queryString, id).Scan(&meal.ID, &meal.Name)
+  if err != nil {
+    log.Fatal(err)
+  }
+  return meal
+}
+
+type Message struct {
+  Message string `json:"message"`
+}
+
+func postMealFoodToDB(foodID int, mealID int) Message {
+  food := getFoodFromDB(foodID)
+  meal := getMealFromDB(mealID)
+  queryString := "INSERT INTO meal_foods (meal_id, food_id) VALUES ($1, $2) RETURNING id"
+  fmt.Println("Preparing to add meal_food:", queryString, mealID, foodID)
+  id := 0
+  err := db().QueryRow(queryString, mealID, foodID).Scan(&id)
+  if err != nil {
+    log.Fatal(err)
+  }
+  if id > 0 {
+    message := fmt.Sprintf("Successfully added %v to %v", strings.ToUpper(food.Name), strings.ToUpper(meal.Name))
+    return Message{Message: message}
+  } else {
+    return Message{Message: "Failure"}
+  }
 }

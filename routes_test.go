@@ -101,3 +101,18 @@ func TestGetMeals(t *testing.T) {
     t.Error("Get One Food - Expected:\n", expected, "Got:\n", actual)
   }
 }
+
+func TestPostMealFood(t *testing.T) {
+  r := setup()
+  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  req, _ := http.NewRequest("POST", "/api/v1/meals/1/foods/1", nil)
+  response := httptest.NewRecorder()
+  r.ServeHTTP(response, req)
+  actual := response.Body.String()
+  actual = strings.TrimRight(actual, "\r\n ")
+  expected := `{"message":"Successfully added PIZZA to BREAKFAST"}`
+  if actual != expected {
+    t.Error("Post meal food - Expected:\n", expected, "Got:\n", actual)
+  }
+}
