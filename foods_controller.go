@@ -43,18 +43,18 @@ func createFood(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateFood(w http.ResponseWriter, r *http.Request) {
-  // w.Header().Set("Content-Type", "application/json")
-  // params := mux.Vars(r)
-  // id, err := strconv.Atoi(params["id"])
-  // fmt.Println(err)
-  // var food Food
-  // _ = json.NewDecoder(r.Body).Decode(&food)
-  // food.ID = index
-  // if updateFoodInDB(food) {
-  //   json.NewEncoder(w).Encode(food)
-  // } else {
-  //   w.WriteHeader(http.StatusNotFound)
-  // }
+  w.Header().Set("Content-Type", "application/json")
+  params := mux.Vars(r)
+  id, _ := strconv.Atoi(params["id"])
+  var foodHolder FoodHolder
+  _ = json.NewDecoder(r.Body).Decode(&foodHolder)
+  calories, _ := strconv.Atoi(foodHolder.TempFood.Calories)
+  food := Food{ID: id, Name: foodHolder.TempFood.Name, Calories: calories}
+  if updateFoodInDB(food) {
+    json.NewEncoder(w).Encode(food)
+  } else {
+    w.WriteHeader(http.StatusNotFound)
+  }
 }
 
 func deleteFood(w http.ResponseWriter, r *http.Request) {

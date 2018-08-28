@@ -65,3 +65,21 @@ func deleteFoodFromDB(id int) bool {
   fmt.Println("Deleted", name)
   return (id == deleted_id)
 }
+
+func updateFoodInDB(food Food) bool {
+  queryString := "UPDATE foods SET name=$1, calories=$2 WHERE id=$3 RETURNING id"
+  fmt.Println("Preparing to update food:", queryString, food.Name, food.Calories, food.ID)
+  id := 0
+  err := db().QueryRow(queryString, food.Name, food.Calories, food.ID).Scan(&id)
+  if err != nil {
+    log.Fatal(err)
+  }
+  if id > 0 {
+    return true
+  } else {
+    return false
+  }
+}
+// UPDATE Customers
+// SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+// WHERE CustomerID = 1;
