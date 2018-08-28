@@ -38,7 +38,7 @@ func TestGetFoods(t *testing.T) {
   actual := response.Body.String()
   actual = strings.TrimRight(actual, "\r\n ")
   expected := `[{"id":1,"name":"Pizza","calories":500},{"id":2,"name":"Cat","calories":700}]`
-  if(actual != expected) {
+  if actual != expected {
     t.Error("Get Foods - Expected:", expected, "Got:", actual)
   }
 }
@@ -52,7 +52,7 @@ func TestAddFood(t *testing.T) {
   actual := response.Body.String()
   actual = strings.TrimRight(actual, "\r\n ")
   expected := `{"id":1,"name":"sushi","calories":300}`
-  if(actual != expected) {
+  if actual != expected {
     t.Error("Get Foods - Expected:", expected, "Got:", actual)
   }
 }
@@ -67,7 +67,7 @@ func TestGetOneFood(t *testing.T) {
   actual := response.Body.String()
   actual = strings.TrimRight(actual, "\r\n ")
   expected := `{"id":2,"name":"Cat","calories":700}`
-  if(actual != expected) {
+  if actual != expected {
     t.Error("Get One Food - Expected:", expected, "Got:", actual)
   }
 }
@@ -80,7 +80,7 @@ func TestDeleteFood(t *testing.T) {
   response := httptest.NewRecorder()
   r.ServeHTTP(response, req)
   status := response.Code
-  if(status != 204) {
+  if status != 204 {
     t.Error("Delete Food - Expected 204, Got:", status)
   }
 }
@@ -97,7 +97,7 @@ func TestGetMeals(t *testing.T) {
   actual := response.Body.String()
   actual = strings.TrimRight(actual, "\r\n ")
   expected := `[{"id":1,"name":"Breakfast","foods":[{"id":1,"name":"Pizza","calories":500},{"id":2,"name":"Cat","calories":700}]},{"id":2,"name":"Snack","foods":null},{"id":3,"name":"Lunch","foods":null},{"id":4,"name":"Dinner","foods":null}]`
-  if(actual != expected) {
+  if actual != expected {
     t.Error("Get One Food - Expected:\n", expected, "Got:\n", actual)
   }
 }
