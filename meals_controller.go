@@ -1,7 +1,7 @@
 package main
 
 import (
-  // "fmt"
+  "fmt"
   "net/http"
   "encoding/json"
   "github.com/gorilla/mux"
@@ -12,6 +12,17 @@ func getMeals(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   meals := getMealsFromDB()
   json.NewEncoder(w).Encode(meals)
+}
+
+func getMeal(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+  params := mux.Vars(r)
+  fmt.Printf("%#v\n", params)
+  id, _ := strconv.Atoi(params["id"])
+  fmt.Println("Getting meal with id:", id)
+  meal := getMealFromDB(id)
+  meal.Foods = getMealFoods(id)
+  json.NewEncoder(w).Encode(meal)
 }
 
 func postMealFood(w http.ResponseWriter, r *http.Request) {

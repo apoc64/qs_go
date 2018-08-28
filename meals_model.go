@@ -29,7 +29,6 @@ func getMealsFromDB() []Meal {
     }
     meals = append(meals, meal)
   }
-  // fmt.Println(meals[0])
   for i := 0; i <= 3; i++ {
     meals[i].Foods = getMealFoods(i + 1)
   }
