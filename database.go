@@ -49,8 +49,7 @@ func migrateDB() {
 
 func seedDB() {
   count := 0
-  err := db().QueryRow("SELECT COUNT(id) FROM meals").Scan(&count)
-  if err != nil {
+  if err := db().QueryRow("SELECT COUNT(id) FROM meals").Scan(&count); err != nil {
     log.Fatal(err)
   }
   fmt.Println("Number of meals:", count)

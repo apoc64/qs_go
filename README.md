@@ -5,12 +5,13 @@ This app provides a Go based backend for a calorie tracking app. The frontend is
 ## Go Version
 
 * Go 1.10.3
+* Gorilla/mux 1.6.2
 
 ## Setup
 
-This app uses Gorilla/mux and Postgres using lib/pq. If you need them, run:
+This app uses Gorilla/mux, Gorilla/handlers, and Postgres using lib/pq. If you need them, run:
 
-``` $ go get github.com/gorilla/mux github.com/lib/pq ```
+``` $ go get github.com/gorilla/mux github.com/gorilla/handlers github.com/lib/pq ```
 
 This app uses dep for package management. If you need it, run:
 
@@ -27,7 +28,15 @@ For a blog post related to deploying this app, visit https://medium.com/@sschwed
 
 ### Database Setup
 
-To run this app locally you must create a Postgres database entitled qs_go. The app should connect to it and run migrations automatically the first time the app, or test suite is run. Local development and testing share a database, and its data is erased at the start of each test.
+To run this app locally you must create a Postgres database entitled qs_go. If you have Postgres set up, with a database named for the root user, run:
+
+``` $ psql ```
+
+Or run the command to enter the psql command line for your system. From the psql command line, run:
+
+``` CREATE DATABASE qs_go ```
+
+The app should connect to it upon its first query, and run migrations automatically the first time the app, or test suite is run. Local development and testing share a database, and its data is erased at the start of each test.
 
 When running in production, the app will connect to a database from a DATABASE_URL environment variable. This is currently set up for Heroku.
 
@@ -47,14 +56,22 @@ To run the test suite, run:
 
 ## Endpoints
 
-This app includes the following endpoints:
+This app is a RESTful API responding with JSON at following endpoints:
 
 * GET /api/v1/foods/ - Gets all foods
 
 * POST /api/v1/foods/ - Adds a food to the database, with the body of the request in the format: {"food":{"name":"pizza","calories":"400"}}
 
-* /api/v1/foods/:id/ - Gets the food with the specified id
+* GET /api/v1/foods/:id - Gets the one food
 
-* /api/v1/meals - Gets all meals with their foods
+* UPDATE /api/v1/foods/:id - Updates a food to the database, with the body of the request in the format: {"food":{"name":"supreme pizza","calories":"500"}}
 
-* /api/v1/meals/:id/foods - Gets all foods for the meal with the specified id
+* DELETE /api/v1/foods/:id - Deletes a food
+
+* GET /api/v1/meals/ - Gets all meals with their foods
+
+* GET /api/v1/meals/:id/foods/ - Gets a meal with all its foods
+
+* POST /api/v1/meals/:id/foods/:id - Adds a food to a meal
+
+* DELETE /api/v1/meals/:id/foods/:id - Removes a food from a meal
