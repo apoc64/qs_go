@@ -14,6 +14,7 @@ func setup() *mux.Router {
   runSQL("TRUNCATE TABLE meal_foods RESTART IDENTITY")
   runSQL("TRUNCATE TABLE foods RESTART IDENTITY")
   runSQL("TRUNCATE TABLE meals RESTART IDENTITY")
+  seedMeals()
 
   r := mux.NewRouter()
   setRoutes(r)
@@ -27,7 +28,7 @@ func TestGetPort(t *testing.T) {
   }
 }
 
-func TestGetFoods(t *testing.T) { // change for db
+func TestGetFoods(t *testing.T) {
   r := setup()
   runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
   runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
@@ -56,7 +57,7 @@ func TestAddFood(t *testing.T) {
   }
 }
 
-func TestGetOneFood(t *testing.T) { // change for db
+func TestGetOneFood(t *testing.T) {
   r := setup()
   runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
   runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
@@ -71,7 +72,7 @@ func TestGetOneFood(t *testing.T) { // change for db
   }
 }
 
-func TestDeleteFood(t *testing.T) { // change for db
+func TestDeleteFood(t *testing.T) {
   r := setup()
   runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
   runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
@@ -81,5 +82,22 @@ func TestDeleteFood(t *testing.T) { // change for db
   status := response.Code
   if(status != 204) {
     t.Error("Delete Food - Expected 204, Got:", status)
+  }
+}
+
+func TestGetMeals(t *testing.T) {
+  r := setup()
+  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  runSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (1, 1)")
+  runSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (2, 1)")
+  req, _ := http.NewRequest("GET", "/api/v1/meals/", nil)
+  response := httptest.NewRecorder()
+  r.ServeHTTP(response, req)
+  actual := response.Body.String()
+  actual = strings.TrimRight(actual, "\r\n ")
+  expected := `[{"id":1,"name":"Breakfast","foods":[{"id":1,"name":"Pizza","calories":500},{"id":2,"name":"Cat","calories":700}]},{"id":2,"name":"Snack","foods":null},{"id":3,"name":"Lunch","foods":null},{"id":4,"name":"Dinner","foods":null}]`
+  if(actual != expected) {
+    t.Error("Get One Food - Expected:\n", expected, "Got:\n", actual)
   }
 }

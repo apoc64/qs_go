@@ -8,7 +8,6 @@ import (
   "strconv"
 )
 
-
 func getFoods(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   foods := getFoodsFromDB()
@@ -71,13 +70,4 @@ func deleteFood(w http.ResponseWriter, r *http.Request) {
   } else {
     w.WriteHeader(http.StatusNotFound)
   }
-  // for index, item := range foods {
-  //   id, err := strconv.Atoi(params["id"])
-  //   fmt.Println(err)
-  //   if item.ID == id {
-  //     foods = append(foods[:index], foods[index+1:]...)
-  //     break
-  //   }
-  // }
-  // json.NewEncoder(w).Encode(foods)
 }
