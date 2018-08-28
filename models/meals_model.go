@@ -1,6 +1,7 @@
-package main
+package models
 
 import (
+  // "qs_go"
   "fmt"
   "log"
   "strings"
@@ -12,7 +13,7 @@ type Meal struct {
   Foods  []Food     `json:"foods"`
 }
 
-func getMealsFromDB() []Meal {
+func GetMealsFromDB() []Meal {
   queryString := "SELECT * FROM meals"
   rows, err := db().Query(queryString)
   if err != nil {
@@ -29,14 +30,13 @@ func getMealsFromDB() []Meal {
     }
     meals = append(meals, meal)
   }
-  // fmt.Println(meals[0])
   for i := 0; i <= 3; i++ {
-    meals[i].Foods = getMealFoods(i + 1)
+    meals[i].Foods = GetMealFoods(i + 1)
   }
   return meals
 }
 
-func getMealFoods(meal_id int) []Food {
+func GetMealFoods(meal_id int) []Food {
   queryString := "SELECT foods.id, foods.name, foods.calories FROM foods INNER JOIN meal_foods ON foods.id=meal_foods.food_id WHERE meal_foods.meal_id=$1"
   rows, err := db().Query(queryString, meal_id)
   if err != nil {
@@ -56,7 +56,7 @@ func getMealFoods(meal_id int) []Food {
   return foods
 }
 
-func getMealFromDB(id int) Meal {
+func GetMealFromDB(id int) Meal {
   queryString := "SELECT * FROM meals WHERE id=$1"
   fmt.Println("Preparing to get meal:", queryString, id)
   var meal Meal
@@ -71,9 +71,9 @@ type Message struct {
   Message string `json:"message"`
 }
 
-func postMealFoodToDB(foodID int, mealID int) Message {
-  food := getFoodFromDB(foodID)
-  meal := getMealFromDB(mealID)
+func PostMealFoodToDB(foodID int, mealID int) Message {
+  food := GetFoodFromDB(foodID)
+  meal := GetMealFromDB(mealID)
   queryString := "INSERT INTO meal_foods (meal_id, food_id) VALUES ($1, $2) RETURNING id"
   fmt.Println("Preparing to add meal_food:", queryString, mealID, foodID)
   id := 0
@@ -89,9 +89,9 @@ func postMealFoodToDB(foodID int, mealID int) Message {
   }
 }
 
-func deleteMealFoodFromDB(foodID int, mealID int) Message {
-  food := getFoodFromDB(foodID)
-  meal := getMealFromDB(mealID)
+func DeleteMealFoodFromDB(foodID int, mealID int) Message {
+  food := GetFoodFromDB(foodID)
+  meal := GetMealFromDB(mealID)
   queryString := "DELETE FROM meal_foods WHERE meal_id=$1 AND food_id=$2 RETURNING id"
   fmt.Println("Preparing to add meal_food:", queryString, mealID, foodID)
   id := 0

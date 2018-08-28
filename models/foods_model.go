@@ -1,6 +1,7 @@
-package main
+package models
 
 import (
+  // "qs_go"
   "fmt"
   "log"
 )
@@ -11,7 +12,7 @@ type Food struct {
   Calories  int     `json:"calories"`
 }
 
-func getFoodsFromDB() []Food {
+func GetFoodsFromDB() []Food {
   queryString := "SELECT * FROM foods"
   rows, err := db().Query(queryString)
   if err != nil {
@@ -31,7 +32,7 @@ func getFoodsFromDB() []Food {
   return foods
 }
 
-func getFoodFromDB(id int) Food {
+func GetFoodFromDB(id int) Food {
   queryString := "SELECT * FROM foods WHERE id=$1"
   fmt.Println("Preparing to get food:", queryString, id)
   var food Food
@@ -42,7 +43,7 @@ func getFoodFromDB(id int) Food {
   return food
 }
 
-func addFoodToDB(food Food) int {
+func AddFoodToDB(food Food) int {
   queryString := "INSERT INTO foods (name, calories) VALUES ($1, $2) RETURNING id"
   fmt.Println("Preparing to add food:", queryString, food.Name, food.Calories)
   id := 0
@@ -53,7 +54,7 @@ func addFoodToDB(food Food) int {
   return id
 }
 
-func deleteFoodFromDB(id int) bool {
+func DeleteFoodFromDB(id int) bool {
   queryString := "DELETE FROM foods WHERE id=$1 RETURNING id, name"
   fmt.Println("Preparing to delete food:", queryString, id)
   deleted_id := 0
@@ -65,3 +66,21 @@ func deleteFoodFromDB(id int) bool {
   fmt.Println("Deleted", name)
   return (id == deleted_id)
 }
+
+func UpdateFoodInDB(food Food) bool {
+  queryString := "UPDATE foods SET name=$1, calories=$2 WHERE id=$3 RETURNING id"
+  fmt.Println("Preparing to update food:", queryString, food.Name, food.Calories, food.ID)
+  id := 0
+  err := db().QueryRow(queryString, food.Name, food.Calories, food.ID).Scan(&id)
+  if err != nil {
+    log.Fatal(err)
+  }
+  if id > 0 {
+    return true
+  } else {
+    return false
+  }
+}
+// UPDATE Customers
+// SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+// WHERE CustomerID = 1;

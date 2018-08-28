@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
   "fmt"
@@ -42,9 +42,9 @@ func getDBName() string {
 }
 
 func migrateDB() {
-  runSQL(foodsTableCreation)
-  runSQL(mealsTableCreation)
-  runSQL(mealFoodsTableCreation)
+  RunSQL(foodsTableCreation)
+  RunSQL(mealsTableCreation)
+  RunSQL(mealFoodsTableCreation)
 }
 
 func seedDB() {
@@ -54,19 +54,19 @@ func seedDB() {
   }
   fmt.Println("Number of meals:", count)
   if count != 4 {
-    seedMeals()
+    SeedMeals()
   }
 }
 
-func seedMeals() {
+func SeedMeals() {
   fmt.Println("Seeding meals")
-  runSQL("INSERT INTO meals (id, name) VALUES (1, 'Breakfast')")
-  runSQL("INSERT INTO meals (id, name) VALUES (2, 'Snack')")
-  runSQL("INSERT INTO meals (id, name) VALUES (3, 'Lunch')")
-  runSQL("INSERT INTO meals (id, name) VALUES (4, 'Dinner')")
+  RunSQL("INSERT INTO meals (id, name) VALUES (1, 'Breakfast')")
+  RunSQL("INSERT INTO meals (id, name) VALUES (2, 'Snack')")
+  RunSQL("INSERT INTO meals (id, name) VALUES (3, 'Lunch')")
+  RunSQL("INSERT INTO meals (id, name) VALUES (4, 'Dinner')")
 }
 
-func runSQL(sqlQuery string) {
+func RunSQL(sqlQuery string) {
   fmt.Println("Preparing to execute:", sqlQuery)
   if _, err := db().Exec(sqlQuery); err != nil {
     log.Fatal(err)

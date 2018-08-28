@@ -1,6 +1,7 @@
 package main
 
 import (
+  // "qs_go/models"
   "fmt"
   "net/http"
   "os"
@@ -26,9 +27,10 @@ func setRoutes(r *mux.Router) {
   r.HandleFunc("/api/v1/foods/", getFoods).Methods("GET")
   r.HandleFunc("/api/v1/foods/{id}/", getFood).Methods("GET")
   r.HandleFunc("/api/v1/foods/", createFood).Methods("POST")
-  r.HandleFunc("/api/v1/foods/{id}/", updateFood).Methods("PATCH")
+  r.HandleFunc("/api/v1/foods/{id}", updateFood).Methods("PATCH")
   r.HandleFunc("/api/v1/foods/{id}", deleteFood).Methods("DELETE")
   r.HandleFunc("/api/v1/meals/", getMeals).Methods("GET")
+  r.HandleFunc("/api/v1/meals/{id}/", getMeal).Methods("GET")
   r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", postMealFood).Methods("POST")
   r.HandleFunc("/api/v1/meals/{meal_id}/foods/{food_id}", deleteMealFood).Methods("DELETE")
 }

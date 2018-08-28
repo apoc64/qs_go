@@ -2,6 +2,7 @@ package main
 
 import (
   // "fmt"
+  "qs_go/models"
   "testing"
   "net/http"
   "net/http/httptest"
@@ -11,10 +12,10 @@ import (
 )
 
 func setup() *mux.Router {
-  runSQL("TRUNCATE TABLE meal_foods RESTART IDENTITY")
-  runSQL("TRUNCATE TABLE foods RESTART IDENTITY")
-  runSQL("TRUNCATE TABLE meals RESTART IDENTITY")
-  seedMeals()
+  models.RunSQL("TRUNCATE TABLE meal_foods RESTART IDENTITY")
+  models.RunSQL("TRUNCATE TABLE foods RESTART IDENTITY")
+  models.RunSQL("TRUNCATE TABLE meals RESTART IDENTITY")
+  models.SeedMeals()
 
   r := mux.NewRouter()
   setRoutes(r)
@@ -30,8 +31,8 @@ func TestGetPort(t *testing.T) {
 
 func TestGetFoods(t *testing.T) {
   r := setup()
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
   req, _ := http.NewRequest("GET", "/api/v1/foods/", nil)
   response := httptest.NewRecorder()
   r.ServeHTTP(response, req)
@@ -59,8 +60,8 @@ func TestAddFood(t *testing.T) {
 
 func TestGetOneFood(t *testing.T) {
   r := setup()
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
   req, _ := http.NewRequest("GET", "/api/v1/foods/2/", nil)
   response := httptest.NewRecorder()
   r.ServeHTTP(response, req)
@@ -74,8 +75,8 @@ func TestGetOneFood(t *testing.T) {
 
 func TestDeleteFood(t *testing.T) {
   r := setup()
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
   req, _ := http.NewRequest("DELETE", "/api/v1/foods/2", nil)
   response := httptest.NewRecorder()
   r.ServeHTTP(response, req)
@@ -87,10 +88,10 @@ func TestDeleteFood(t *testing.T) {
 
 func TestGetMeals(t *testing.T) {
   r := setup()
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
-  runSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (1, 1)")
-  runSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (2, 1)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  models.RunSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (1, 1)")
+  models.RunSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (2, 1)")
   req, _ := http.NewRequest("GET", "/api/v1/meals/", nil)
   response := httptest.NewRecorder()
   r.ServeHTTP(response, req)
@@ -104,8 +105,8 @@ func TestGetMeals(t *testing.T) {
 
 func TestPostMealFood(t *testing.T) {
   r := setup()
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
   req, _ := http.NewRequest("POST", "/api/v1/meals/1/foods/1", nil)
   response := httptest.NewRecorder()
   r.ServeHTTP(response, req)
@@ -119,8 +120,8 @@ func TestPostMealFood(t *testing.T) {
 
 func TestDeleteMealFood(t *testing.T) {
   r := setup()
-  runSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
-  runSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (1, 1)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  models.RunSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (1, 1)")
   req, _ := http.NewRequest("DELETE", "/api/v1/meals/1/foods/1", nil)
   response := httptest.NewRecorder()
   r.ServeHTTP(response, req)
@@ -129,5 +130,38 @@ func TestDeleteMealFood(t *testing.T) {
   expected := `{"message":"Successfully removed PIZZA from BREAKFAST"}`
   if actual != expected {
     t.Error("Post meal food - Expected:\n", expected, "Got:\n", actual)
+  }
+}
+
+func TestGetOneMeal(t *testing.T) {
+  r := setup()
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  models.RunSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (1, 1)")
+  models.RunSQL("INSERT INTO meal_foods (food_id, meal_id) VALUES (2, 1)")
+  req, _ := http.NewRequest("GET", "/api/v1/meals/1/", nil)
+  response := httptest.NewRecorder()
+  r.ServeHTTP(response, req)
+  actual := response.Body.String()
+  actual = strings.TrimRight(actual, "\r\n ")
+  expected := `{"id":1,"name":"Breakfast","foods":[{"id":1,"name":"Pizza","calories":500},{"id":2,"name":"Cat","calories":700}]}`
+  if actual != expected {
+    t.Error("Get One Meal - Expected:\n", expected, "Got:\n", actual)
+  }
+}
+
+func TestUpdateFood(t *testing.T) {
+  r := setup()
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Pizza', 500)")
+  models.RunSQL("INSERT INTO foods (name, calories) VALUES ('Cat', 700)")
+  payload := []byte(`{"food":{"name":"sushi","calories":"300"}}`)
+  req, _ := http.NewRequest("PATCH", "/api/v1/foods/2", bytes.NewBuffer(payload))
+  response := httptest.NewRecorder()
+  r.ServeHTTP(response, req)
+  actual := response.Body.String()
+  actual = strings.TrimRight(actual, "\r\n ")
+  expected := `{"id":2,"name":"sushi","calories":300}`
+  if actual != expected {
+    t.Error("Get One Food - Expected:", expected, "Got:", actual)
   }
 }

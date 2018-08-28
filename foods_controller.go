@@ -1,6 +1,7 @@
 package main
 
 import (
+  "qs_go/models"
   "fmt"
   "net/http"
   "encoding/json"
@@ -10,7 +11,7 @@ import (
 
 func getFoods(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-  foods := getFoodsFromDB()
+  foods := models.GetFoodsFromDB()
   json.NewEncoder(w).Encode(foods)
 }
 
@@ -18,7 +19,7 @@ func getFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
   id, _ := strconv.Atoi(params["id"])
-  food := getFoodFromDB(id)
+  food := models.GetFoodFromDB(id)
   json.NewEncoder(w).Encode(food)
 }
 
@@ -36,32 +37,34 @@ func createFood(w http.ResponseWriter, r *http.Request) {
   _ = json.NewDecoder(r.Body).Decode(&foodHolder)
   fmt.Printf("Params: %#v\n", foodHolder)
   calories, _ := strconv.Atoi(foodHolder.TempFood.Calories)
-  food := Food{Name: foodHolder.TempFood.Name, Calories: calories}
-  id := addFoodToDB(food)
+  food := models.Food{Name: foodHolder.TempFood.Name, Calories: calories}
+  id := models.AddFoodToDB(food)
   food.ID = id
   json.NewEncoder(w).Encode(food)
 }
 
 func updateFood(w http.ResponseWriter, r *http.Request) {
-  // w.Header().Set("Content-Type", "application/json")
-  // params := mux.Vars(r)
-  // id, err := strconv.Atoi(params["id"])
-  // fmt.Println(err)
-  // var food Food
-  // _ = json.NewDecoder(r.Body).Decode(&food)
-  // food.ID = index
-  // if updateFoodInDB(food) {
-  //   json.NewEncoder(w).Encode(food)
-  // } else {
-  //   w.WriteHeader(http.StatusNotFound)
-  // }
+  w.Header().Set("Content-Type", "application/json")
+  params := mux.Vars(r)
+  id, _ := strconv.Atoi(params["id"])
+  fmt.Println("Update food method called")
+  var foodHolder FoodHolder
+  _ = json.NewDecoder(r.Body).Decode(&foodHolder)
+  calories, _ := strconv.Atoi(foodHolder.TempFood.Calories)
+  food := models.Food{ID: id, Name: foodHolder.TempFood.Name, Calories: calories}
+  fmt.Println("Preparing to update food:", food)
+  if models.UpdateFoodInDB(food) {
+    json.NewEncoder(w).Encode(food)
+  } else {
+    w.WriteHeader(http.StatusNotFound)
+  }
 }
 
 func deleteFood(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   params := mux.Vars(r)
   id, _ := strconv.Atoi(params["id"])
-  if deleteFoodFromDB(id) {
+  if models.DeleteFoodFromDB(id) {
     w.WriteHeader(http.StatusNoContent)
   } else {
     w.WriteHeader(http.StatusNotFound)
