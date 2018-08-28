@@ -92,7 +92,7 @@ func postMealFoodToDB(foodID int, mealID int) Message {
 func deleteMealFoodFromDB(foodID int, mealID int) Message {
   food := getFoodFromDB(foodID)
   meal := getMealFromDB(mealID)
-  queryString := "INSERT INTO meal_foods (meal_id, food_id) VALUES ($1, $2) RETURNING id"
+  queryString := "DELETE FROM meal_foods WHERE meal_id=$1 AND food_id=$2 RETURNING id"
   fmt.Println("Preparing to add meal_food:", queryString, mealID, foodID)
   id := 0
   err := db().QueryRow(queryString, mealID, foodID).Scan(&id)
@@ -100,7 +100,7 @@ func deleteMealFoodFromDB(foodID int, mealID int) Message {
     log.Fatal(err)
   }
   if id > 0 {
-    message := fmt.Sprintf("Successfully added %v to %v", strings.ToUpper(food.Name), strings.ToUpper(meal.Name))
+    message := fmt.Sprintf("Successfully removed %v from %v", strings.ToUpper(food.Name), strings.ToUpper(meal.Name))
     return Message{Message: message}
   } else {
     return Message{Message: "Failure"}
