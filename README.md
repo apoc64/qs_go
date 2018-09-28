@@ -64,7 +64,7 @@ This app is a RESTful API responding with JSON at following endpoints:
 
 * GET /api/v1/foods/:id - Gets the one food
 
-* UPDATE /api/v1/foods/:id - Updates a food to the database, with the body of the request in the format: {"food":{"name":"supreme pizza","calories":"500"}}
+* PATCH /api/v1/foods/:id - Updates a food to the database, with the body of the request in the format: {"food":{"name":"supreme pizza","calories":"500"}}
 
 * DELETE /api/v1/foods/:id - Deletes a food
 
